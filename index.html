@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="utf-8">
+        <title>Учет подписки</title>
+        <link href="style.css" rel="stylesheet" type="text/css">
+        <script>
+            function showIndexInput() {
+                var options = document.getElementById('options');
+                var indexInput = document.getElementById('indexInput');
+                var priceRangeInput = document.getElementById('priceRangeInput');
+                if (options.value === '4') {
+                    indexInput.style.display = 'block';
+                    priceRangeInput.style.display = 'none';
+                } else if (options.value === '5') {
+                    indexInput.style.display = 'none';
+                    priceRangeInput.style.display = 'block';
+                } else {
+                    indexInput.style.display = 'none';
+                    priceRangeInput.style.display = 'none';
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <form method="POST" action="request.php">
+            <label>Выберите запрос:<br><br>
+                <select name="options" id="options" onchange="showIndexInput()">
+                    <option value="1">Запрос №1</option>
+                    <option value="2">Запрос №2</option>
+                    <option value="3">Запрос №3</option>
+                    <option value="4">Запрос №4</option>
+                    <option value="5">Запрос №5</option>
+                    <option value="6">Запрос №6</option>
+                    <option value="7">Запрос №7</option>
+                    <option value="8">Запрос №8</option>
+                </select>
+            </label>
+            <div id="indexInput" style="display: none;">
+                <input type="number" id="index_pub" name="index_pub" placeholder="Введите индекс издания">
+            </div>
+            <div id="priceRangeInput" style="display: none;">
+                <input type="number" id="lowerPrice" name="lowerPrice" placeholder="Введите верхнюю границу">
+                <input type="number" id="upperPrice" name="upperPrice" placeholder="Введите нижнюю границу">
+            </div>
+            <button type="submit">Выбрать</button>
+        </form>
+    </body>
+</html>

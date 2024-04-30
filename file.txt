@@ -1,0 +1,141 @@
+CREATE TABLE public (
+    id_pub INT PRIMARY KEY AUTO_INCREMENT,
+    index_pub INT NOT NULL,
+    type_pub VARCHAR(50) NOT NULL,
+    name_pub VARCHAR(50) NOT NULL,
+    price_pub INT NOT NULL
+);
+
+CREATE TABLE human (
+    id_hum INT PRIMARY KEY AUTO_INCREMENT,
+    name_hum VARCHAR(50) NOT NULL,
+    street_hum VARCHAR(50) NOT NULL,
+    num_house INT NOT NULL,
+    flat_house INT NOT NULL,
+    id_pub INT NOT NULL,
+    FOREIGN KEY (id_pub) REFERENCES public(id_pub),
+    date_pod DATE NOT NULL,
+    sub_period INT NOT NULL
+);
+
+CREATE TABLE delivery (
+    id_del INT PRIMARY KEY AUTO_INCREMENT,
+    id_hum INT NOT NULL,
+    id_pub INT NOT NULL,
+    FOREIGN KEY (id_hum) REFERENCES human(id_hum),
+    FOREIGN KEY (id_pub) REFERENCES public(id_pub)
+);
+
+DROP TABLE public;
+DROP TABLE human;
+DROP TABLE delivery;
+
+
+INSERT INTO public (index_pub, type_pub, name_pub, price_pub) VALUES
+(12123, 'Газета', 'Известия', 30),
+(2, 'Журнал', 'Комсомольская правда', 500),
+(3, 'Газета', 'Российская газета', 40),
+(12123, 'Журнал', 'Московский комсомолец', 55),
+(5, 'Газета', 'Советская Россия', 35),
+(12123, 'Журнал', 'Промышленность', 200),
+(7, 'Газета', 'Красная звезда', 34),
+(8, 'Журнал', 'Советская культура', 250),
+(12123, 'Газета', 'Правда', 40),
+(10, 'Журнал', 'Советский спорт', 330),
+(11, 'Газета', 'Известия', 45),
+(12123, 'Журнал', 'Комсомольская правда', 50),
+(13, 'Газета', 'Пашковка', 50),
+(12123, 'Журнал', 'Московский комсомолец', 400),
+(15, 'Газета', 'Советская Россия', 20);
+
+
+INSERT INTO human (name_hum, street_hum, num_house, flat_house, id_pub, date_pod, sub_period) VALUES
+('Иван Иванов', 'Улица Садовая', 123, 4, 1, '2023-01-01', 12),
+('Анна Петрова', 'Улица Мира', 2, 2, 2, '2023-02-01', 6),
+('Сергей Сидоров', 'Улица Садовая', 2, 3, 3, '2023-03-01', 18),
+('Мария Васильева', 'Улица Победы', 101, 1, 4, '2023-04-01', 24),
+('Алексей Дмитриев', 'Улица Труда', 112, 5, 5, '2023-05-01', 30),
+('Елена Николаева', 'Улица Садовая', 7, 4, 6, '2023-06-01', 36),
+('Владимир Сергеев', 'Улица Культуры', 142, 3, 7, '2023-07-01', 42),
+('Татьяна Георгиева', 'Улица Науки', 153, 2, 8, '2023-08-01', 48),
+('Ольга Михайлова', 'Улица Спорта', 164, 1, 9, '2023-09-01', 54),
+('Дмитрий Иванов', 'Улица Садовая', 8, 5, 10, '2023-10-01', 60),
+('Екатерина Петрова', 'Улица Музыки', 186, 4, 11, '2023-11-01', 66),
+('Александр Сидоров', 'Улица Книг', 197, 3, 12, '2023-12-01', 72),
+('Наталья Васильева', 'Улица Садовая', 208, 2, 13, '2024-01-01', 78),
+('Андрей Дмитриев', 'Улица Телевидения', 219, 5, 14, '2024-02-01', 84),
+('Вера Георгиева', 'Улица Садовая', 2, 4, 15, '2024-03-01', 90);
+
+
+INSERT INTO delivery (id_hum, id_pub) VALUES
+(1, 1),
+(2, 1),
+(3, 2),
+(4, 4),
+(5, 5),
+(6, 3),
+(7, 7),
+(8, 8),
+(9, 6),
+(10, 10),
+(11, 21),
+(12, 12),
+(13, 13),
+(14, 14),
+(15, 15);
+
+DROP TABLE public;
+DROP TABLE human;
+DROP TABLE delivery;
+
+1 ЗАПРОС
+SELECT * FROM public
+WHERE type_pub = 'Газета' AND name_pub LIKE 'П%';
+
+2 ЗАПРОС
+SELECT h.name_hum, h.street_hum, h.num_house, h.flat_house, p.name_pub
+FROM human h
+JOIN public p ON h.id_pub = p.id_pub
+WHERE h.street_hum = 'Улица Садовая' AND p.index_pub = 12123;
+
+
+3 ЗАПРОС
+SELECT * FROM human
+WHERE street_hum = 'Улица Садовая' AND num_house IN (2, 7, 8);
+
+4 ЗАПРОС
+SELECT * FROM public WHERE index_pub = 12123;
+
+5 ЗАПРОС
+SELECT * FROM public WHERE price_pub BETWEEN 10 AND 30;
+
+6 ЗАПРОС
+SELECT 
+    p.index_pub, 
+    p.name_pub, 
+    p.price_pub, 
+    h.date_pod, 
+    h.sub_period, 
+    p.price_pub * h.sub_period AS subscription_cost
+FROM 
+    human h
+JOIN 
+    public p ON h.id_pub = p.id_pub;
+
+7 ЗАПРОС
+SELECT 
+    type_pub, 
+    AVG(price_pub) AS average_price
+FROM 
+    public
+GROUP BY 
+    type_pub;
+
+8 ЗАПРОС
+SELECT 
+    street_hum, 
+    COUNT(id_hum) AS subscribers_count
+FROM 
+    human
+GROUP BY 
+    street_hum;
